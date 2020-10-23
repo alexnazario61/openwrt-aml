@@ -1,0 +1,79 @@
+ifeq ($(strip $(BRCM_DRV_INCLUDED)),TRUE)
+
+drvdirs = $(componentdir)/udrv/include \
+          $(bsadir)/udrv/ \
+          $(bsadir)/udrv/$(os_name) \
+          $(bsadir)/udrv/$(os_name)/client
+
+drvsrcs = uipc_cl_control.c
+
+# compile/link common function only for Linux
+ifeq ($(strip $(os_name)),linux)
+drvsrcs := $(drvsrcs) \
+           uipc.c \
+           uipc_cl_socket.c \
+           uipc_fifo.c \
+           uipc_rb.c \
+           uipc_shm.c \
+           uipc_mutex.c \
+           uipc_thread.c \
+           uipc_sema.c
+endif
+
+# for Vxworks, use the files compiled for server
+ifeq ($(strip $(os_name)),vxworks)
+endif
+
+ifeq ($(strip $(BSA_HH_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_hh.c
+endif
+
+ifeq ($(strip $(BSA_AV_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_av.c
+ifeq ($(strip $(BSA_BAV_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_av_bav.c
+endif
+endif
+
+ifeq ($(strip $(BSA_AVK_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_avk.c
+endif
+
+ifeq ($(strip $(BSA_PBC_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_pbc.c
+endif
+
+ifeq ($(strip $(BSA_MCE_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_mce_rx.c uipc_mce_tx.c
+endif
+
+ifeq ($(strip $(BSA_HS_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_sco.c
+else
+ifeq ($(strip $(BSA_AG_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_sco.c
+endif
+endif
+
+ifeq ($(strip $(BSA_DG_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_dg.c
+endif
+
+ifeq ($(strip $(BSA_PAN_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_pan.c
+endif
+
+ifeq ($(strip $(BSA_HL_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_cl_hl.c
+endif
+
+ifeq ($(strip $(BSA_SAC_INCLUDED)),TRUE)
+drvsrcs := $(drvsrcs) uipc_sac.c
+endif
+
+srcdirs := $(srcdirs) $(drvdirs)
+incdirs := $(incdirs) $(drvdirs)
+
+cl_drv_sources := $(cl_drv_sources) $(drvsrcs)
+
+endif

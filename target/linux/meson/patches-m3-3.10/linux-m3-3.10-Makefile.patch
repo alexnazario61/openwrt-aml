@@ -1,0 +1,20 @@
+Index: linux-3.10.33/Makefile
+===================================================================
+--- linux-3.10.33.orig/Makefile	2015-03-31 13:35:07.160957741 +0800
++++ linux-3.10.33/Makefile	2015-03-31 13:42:13.540965740 +0800
+@@ -383,7 +383,6 @@
+ 		   -Werror=maybe-uninitialized \
+ 		   -Werror=unused-variable \
+ 		   -Werror=format \
+-		   -Werror=unused-function \
+ 		   -Werror=switch \
+ 		   -Werror=strict-prototypes \
+ 		   -Werror=declaration-after-statement \
+@@ -394,6 +393,7 @@
+ 		   -Werror=return-type \
+ 		   -Werror=parentheses \
+ 		   -Werror=int-to-pointer-cast \
++		   -Wno-error=unused-function \
+ 		   -Wno-error=cpp
+ KBUILD_AFLAGS_KERNEL :=
+ KBUILD_CFLAGS_KERNEL :=

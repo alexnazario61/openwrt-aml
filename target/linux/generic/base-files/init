@@ -1,0 +1,135 @@
+#!/bin/sh
+# Copyright (C) 2006 OpenWrt.org
+export INITRAMFS=1
+#Mount things needed by this script
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+/bin/mount -t devtmpfs devtmpfs /dev
+
+#Create device nodes
+#mdev -s
+#
+##insert our precious NFTL
+#modprobe aml_nftl_dev
+
+#Function for parsing command line options with "=" in them
+# get_opt("init=/sbin/init") will return "/sbin/init"
+get_opt() {
+    echo "$@" | cut -d "=" -f 2
+}
+
+#Defaults
+init="/sbin/init"
+root="/dev/cardblksd1"
+overlay=""
+firmware=""
+rootfstype=
+
+#Process command line options
+for i in $(cat /proc/cmdline); do
+    case $i in
+        root\=*)
+            root=$(get_opt $i)
+            ;;
+        firmware\=*)
+            firmware=$(get_opt $i)
+            ;;
+        rootfstype\=*)
+            rootfstype=$(get_opt $i)
+            ;;
+        init\=*)
+            init=$(get_opt $i)
+            ;;
+        overlay\=*)
+            overlay=$(get_opt $i)
+            ;;
+    esac
+done
+
+#Mount the root device
+if [ "${rootfstype}" != "" ]; then
+    mount -t ${rootfstype} "${root}" /rom
+else
+    mount "${root}" /rom
+fi
+if [ "${overlay}" != "" ]; then
+	e2fsck ${overlay}
+    mount ${overlay} /overlay
+    mount -t overlayfs overlayfs -olowerdir=/rom,upperdir=/overlay /mnt
+else
+    mount /rom /mnt
+    umount /rom
+fi
+
+#if [ "${rootfstype}" != "" ]; then
+#    mount -t ${rootfstype} "${root}" /overlay
+#    mount -t overlayfs overlayfs -olowerdir=/,upperdir=/overlay /mnt
+#else
+#    mount "${root}" /overlay
+#    mount -t overlayfs overlayfs -olowerdir=/,upperdir=/overlay /mnt
+#fi
+
+get_boot() {
+    echo `awk '
+    BEGIN{
+       mtd = -1
+    }
+    /"boot"/ {mtd = $1; len = length(mtd); mtd=substr(mtd, 4, len - 4); 
+    } 
+    END{
+        if (mtd != -1) print "/dev/mtdblock"mtd
+    }' /proc/mtd`
+}
+
+if [ -n "${firmware}" ]; then
+    if [ -f "/mnt/${firmware}" ] ; then
+        echo "formating file system"
+        mkfs.ext4 /dev/system
+        mkdir -p system
+        mount -t ext4 /dev/system /system
+        echo "extracting file system ..."
+        gunzip -c /mnt/rootfs.tar.gz  | tar -xf - -C /system
+        if [ $? -ne 0 ]; then
+           echo "Error: untar failed."
+        else
+           echo "Done"
+        fi
+        device=$(get_boot)
+        if [ "$device" == "" ]; then
+            device=/dev/boot
+        fi
+        if [ -f "/mnt/boot.img" ]; then
+           echo "Writing boot.img into boot partition(${device})..."
+           dd if=/mnt/boot.img of=${device}
+           echo "Done"
+        elif [ -f "/mnt/uImage" ]; then
+           echo "Writing uImage into boot partition(${device})..."
+           dd if=/mnt/uImage of=${device}
+           echo "Done"
+        fi
+        sync
+        echo "update complete"
+        umount /sys /proc /dev
+        #Switch to the new root and execute init
+        /bin/mount -t devtmpfs devtmpfs /system/dev
+        exec switch_root -c /dev/console /system "${init}"
+    else
+        echo "cannot locate ${firmware}"
+        echo "boot normally..."
+    fi
+fi
+#Check if $init exists and is executable
+if [[ -x "/mnt/${init}" ]] ; then
+    #Unmount all other mounts so that the ram used by
+    #the initramfs can be cleared after switch_root
+    umount /sys /proc /dev
+
+    #Switch to the new root and execute init
+    /bin/mount -t devtmpfs devtmpfs /mnt/dev
+#    exec chroot /mnt /sbin/init
+    exec switch_root -c /dev/console /mnt "${init}"
+fi
+
+#This will only be run if the exec above failed
+echo "Failed to switch root, dropping to a shell"
+exec /sbin/init

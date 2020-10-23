@@ -1,0 +1,22 @@
+ifeq ($(strip $(BRCM_GKI_INCLUDED)),TRUE)
+gkicommondir = $(gkidir)/common
+gkiplatdir = $(bsadir)/gki/$(os_name) \
+             $(bsadir)/gki/$(os_name)/client
+
+gkidirs = $(gkicommondir) $(gkiplatdir)
+
+#include path for brcm header files
+incdirs := $(incdirs) $(gkidirs)
+srcdirs := $(srcdirs) $(gkidirs)
+
+# compile/link GKI only for linux
+ifeq ($(strip $(os_name)),linux)
+gkisrcs := $(gkisrcs) gki_linux.c gki_buffer.c gki_debug.c
+gkisources := $(gkisources) $(gkisrcs)
+endif
+
+# for Vxworks,we use the gki files compiled by the server
+ifeq ($(strip $(os_name)),vxworks)
+endif
+
+endif

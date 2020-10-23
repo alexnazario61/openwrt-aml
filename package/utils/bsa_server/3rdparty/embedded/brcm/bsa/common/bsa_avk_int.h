@@ -1,0 +1,318 @@
+/*****************************************************************************
+ **
+ **  Name:           bsa_avk_int.h
+ **
+ **  Description:    Contains private BSA AVK data
+ **
+ **  Copyright (c) 2009-2012, Broadcom Corp., All Rights Reserved.
+ **  Broadcom Bluetooth Core. Proprietary and confidential.
+ **
+ *****************************************************************************/
+
+#ifndef BSA_AVK_INT_H
+#define BSA_AVK_INT_H
+
+#include "bsa_avk_api.h"
+
+/*
+ * AVK Message definition
+ */
+enum
+{
+    BSA_AVK_MSGID_ENABLE_CMD = BSA_AVK_MSGID_FIRST,
+    BSA_AVK_MSGID_DISABLE_CMD,
+    BSA_AVK_MSGID_REGISTER_CMD,
+    BSA_AVK_MSGID_DEREGISTER_CMD,
+    BSA_AVK_MSGID_OPEN_CMD,
+    BSA_AVK_MSGID_CLOSE_CMD,
+    BSA_AVK_MSGID_START_CMD,
+    BSA_AVK_MSGID_STOP_CMD,
+    BSA_AVK_MSGID_RC_CMD_CMD,
+    BSA_AVK_MSGID_VD_CMD_CMD,
+    BSA_AVK_MSGID_CANCEL_CMD,
+    BSA_AVK_MSGID_LIST_PLAYER_ATTR_CMD, /*meta msg start*/
+    BSA_AVK_MSGID_LIST_PLAYER_VALUES_CMD,
+    BSA_AVK_MSGID_GET_PLAYER_VALUE_CMD,
+    BSA_AVK_MSGID_SET_PLAYER_VALUE_CMD,
+    BSA_AVK_MSGID_GET_PLAYER_ATTR_TEXT_CMD,
+    BSA_AVK_MSGID_GET_PLAYER_ATTR_VALUE_TEXT_CMD,
+    BSA_AVK_MSGID_GET_ELEMENT_ATTR_CMD,
+    BSA_AVK_MSGID_GET_PLAY_STATUS_CMD,
+    BSA_AVK_MSGID_SET_ADDRESSED_PLAYER,
+    BSA_AVK_MSGID_SET_BROWSED_PLAYER,
+    BSA_AVK_MSGID_CHANGE_PATH_CMD,
+    BSA_AVK_MSGID_GET_FOLDER_ITEMS_CMD,
+    BSA_AVK_MSGID_GET_ITEMS_ATTR_CMD,
+    BSA_AVK_MSGID_SEARCH_CMD,
+    BSA_AVK_MSGID_PLAY_ITEM_CMD,
+    BSA_AVK_MSGID_ADD_TO_NOW_PLAYING_CMD,
+    BSA_AVK_MSGID_SET_ABSOLUTE_VOLUME_CMD, /*meta msg end*/
+    BSA_AVK_MSGID_OPEN_RC_CMD,
+    BSA_AVK_MSGID_CLOSE_RC_CMD,
+    BSA_AVK_MSGID_RELAY_AUDIO_CMD,
+    BSA_AVK_MSGID_LAST_CMD = BSA_AVK_MSGID_RELAY_AUDIO_CMD,
+
+    BSA_AVK_MSGID_OPEN_EVT, /* AVK Connection Open*/
+    BSA_AVK_MSGID_CLOSE_EVT, /* AVK Connection Closed */
+    BSA_AVK_MSGID_RC_OPEN_EVT, /* RC Connection Open*/
+    BSA_AVK_MSGID_RC_CLOSE_EVT, /* RC Connection Closed */
+    BSA_AVK_MSGID_START_EVT, /* streaming started */
+    BSA_AVK_MSGID_STOP_EVT, /* streaming stoped */
+    BSA_AVK_MSGID_REMOTE_RSP_EVT,
+    BSA_AVK_MSGID_VENDOR_CMD_EVT,
+    BSA_AVK_MSGID_VENDOR_RSP_EVT,
+    BSA_AVK_MSGID_CP_INFO_EVT,
+    BSA_AVK_MSGID_SUSPEND_EVT, /* AVK stream suspended */
+    BSA_AVK_MSGID_META_REGISTER_NOTIFICATION_RSP_EVT,
+    BSA_AVK_MSGID_META_LIST_PLAYER_APP_ATTR_RSP_EVT,
+    BSA_AVK_MSGID_META_LIST_PLAYER_APP_VALUES_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_PLAYER_APP_VALUE_RSP_EVT,
+    BSA_AVK_MSGID_META_SET_PLAYER_APP_VALUE_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_PLAYER_ATTR_TEXT_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_PLAYER_VALUE_TEXT_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_ELEMENT_ATTR_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_PLAY_STATUS_RSP_EVT,    
+    BSA_AVK_MSGID_META_SET_ADDRESSED_PLAYER_RSP_EVT,
+    BSA_AVK_MSGID_META_SET_BR_PLAYER_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_FOLDER_ITEMS_RSP_EVT,
+    BSA_AVK_MSGID_META_GET_ITEM_ATTR_RSP_EVT,
+    BSA_AVK_MSGID_META_CHANGE_PATH_RSP_EVT,
+    BSA_AVK_MSGID_META_PLAY_ITEM_RSP_EVT,    
+    BSA_AVK_MSGID_META_ADD_TO_NOW_PLAYING_RSP_EVT,
+    BSA_AVK_MSGID_LAST_EVT = BSA_AVK_MSGID_META_ADD_TO_NOW_PLAYING_RSP_EVT
+};
+
+/* Generic message containing a status */
+typedef struct
+{
+    tBSA_STATUS status;
+
+} tBSA_AVK_MSGID_STATUS_RSP;
+
+/*
+ * AVK Enable
+ */
+typedef struct
+{
+    tBSA_SEC_AUTH sec_mask;
+    tBSA_AVK_FEAT feature;
+} tBSA_AVK_MSGID_ENABLE_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_ENABLE_CMD_RSP;
+
+/*
+ * AVK Disable
+ */
+
+typedef tBSA_AVK_DISABLE tBSA_AVK_MSGID_DISABLE_CMD_REQ;
+
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_DISABLE_CMD_RSP;
+
+/*
+ * AVK Register
+ */
+typedef tBSA_AVK_REGISTER tBSA_AVK_MSGID_REGISTER_CMD_REQ;
+
+typedef struct
+{
+    tBSA_STATUS status;
+    tBSA_AVK_CHNL channel; /* audio/video */
+    tUIPC_CH_ID uipc_channel;
+} tBSA_AVK_MSGID_REGISTER_CMD_RSP;
+
+/*
+ * AVK Deregister
+ */
+typedef tBSA_AVK_DEREGISTER tBSA_AVK_MSGID_DEREGISTER_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_DEREGISTER_CMD_RSP;
+
+/*
+ * AVK Open
+ */
+typedef tBSA_AVK_OPEN tBSA_AVK_MSGID_OPEN_CMD_REQ;
+
+typedef struct
+{
+    tBSA_STATUS status;
+} tBSA_AVK_MSGID_OPEN_CMD_RSP;
+
+typedef tBSA_AVK_OPEN_MSG tBSA_AVK_MSGID_OPEN_EVT;
+
+/*
+ * AVK Close
+ */
+typedef tBSA_AVK_CLOSE tBSA_AVK_MSGID_CLOSE_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_CLOSE_CMD_RSP;
+
+typedef tBSA_AVK_CLOSE_MSG tBSA_AVK_MSGID_CLOSE_EVT;
+
+typedef tBSA_AVK_CANCEL_CMD tBSA_AVK_CANCEL_CMD_REQ;
+
+/*
+ * AVK Start
+ */
+typedef tBSA_AVK_START tBSA_AVK_MSGID_START_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_START_CMD_RSP;
+
+typedef tBSA_AVK_START_MSG tBSA_AVK_MSGID_START_EVT;
+
+/*
+ * AVK Stop
+ */
+typedef  tBSA_AVK_STOP tBSA_AVK_MSGID_STOP_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_STOP_CMD_RSP;
+
+typedef tBSA_AVK_STOP_MSG tBSA_AVK_MSGID_STOP_EVT;
+
+/*
+ * AVK rc open
+ */
+
+typedef tBSA_AVK_RC_OPEN_MSG tBSA_AVK_MSGID_RC_OPEN_EVT;
+
+/*
+ * AVK rc command
+ */
+typedef tBSA_AVK_REM_CMD tBSA_AVK_MSGID_REM_CMD_REQ;
+
+typedef tBSA_AVK_REMOTE_RSP_MSG tBSA_AVK_MSGID_REMOTE_CMD_RSP;
+
+/*
+ * AVK vendor command
+ */
+typedef tBSA_AVK_VEN_CMD tBSA_AVK_MSGID_VEN_CMD_REQ;
+
+typedef tBSA_AVK_MSGID_STATUS_RSP tBSA_AVK_MSGID_VEN_CMD_RSP;
+
+typedef tBSA_AVK_VENDOR_CMD_MSG tBSA_AVK_MSGID_VENDOR_CMD_REQ;
+
+typedef tBSA_AVK_VENDOR_CMD_MSG tBSA_AVK_MSGID_VENDOR_CMD_RES;
+
+typedef tBSA_AVK_CP_INFO_MSG tBSA_AVK_MSGID_CP_INFO_EVT;
+
+/*
+ * AVK Meta command
+*/
+
+typedef tBSA_AVK_LIST_PLAYER_ATTR tBSA_AVK_MSGID_LIST_PLAYER_ATTR_REQ;
+typedef tBSA_AVK_LIST_PLAYER_VALUES tBSA_AVK_MSGID_LIST_PLAYER_VALUES_REQ;
+typedef tBSA_AVK_GET_PLAYER_VALUE   tBSA_AVK_MSGID_GET_PLAYER_VALUE_REQ;
+typedef tBSA_AVK_SET_PLAYER_VALUE tBSA_AVK_MSGID_SET_PLAYER_VALUE_REQ;
+typedef tBSA_AVK_GET_PLAYER_ATTR_TEXT tBSA_AVK_MSGID_GET_PLAYER_ATTR_TEXT_REQ;
+typedef tBSA_AVK_GET_PLAYER_VALUE_TEXT tBSA_AVK_MSGID_GET_PLAYER_ATTR_VALUE_TEXT_REQ;
+typedef tBSA_AVK_GET_ELEMENT_ATTR tBSA_AVK_MSGID_GET_ELEMENT_ATTR_REQ;
+typedef tBSA_AVK_GET_PLAY_STATUS tBSA_AVK_MSGID_GET_PLAY_STATUS;
+typedef tBSA_AVK_SET_ADDR_PLAYER tBSA_AVK_MSGID_SET_ADDR_PLAYER_REQ;
+typedef tBSA_AVK_SET_BROWSED_PLAYER tBSA_AVK_MSGID_SET_BROWSED_PLAYER_REQ;
+typedef tBSA_AVK_CHG_PATH tBSA_AVK_MSGID_CHANGE_PATH_REQ;
+typedef tBSA_AVK_GET_FOLDER_ITEMS tBSA_AVK_MSGID_GET_FOLDER_ITEMS_REQ;
+typedef tBSA_AVK_GET_ITEMS_ATTR tBSA_AVK_MSGID_GET_ITEMS_ATTR_REQ;
+typedef tBSA_AVK_PLAY_ITEM tBSA_AVK_MSGID_PLAY_ITEM_REQ;
+typedef tBSA_AVK_ADD_TO_PLAY tBSA_AVK_MSGID_ADD_TO_PLAY_REQ;
+typedef tBSA_AVK_RELAY_AUDIO tBSA_AVK_MSGID_RELAY_AUDIO;
+
+
+typedef tBSA_AVK_REG_NOTIF_MSG              tBSA_AVK_MSGID_REG_NOTIF_RSP;
+typedef tBSA_AVK_LIST_APP_ATTR_MSG          tBSA_AVK_MSGID_LIST_APP_ATTR_RSP;
+typedef tBSA_AVK_LIST_APP_VALUES_MSG        tBSA_AVK_MSGID_LIST_APP_VALUES_RSP;
+typedef tBSA_AVK_SET_PLAYER_APP_VALUE_MSG   tBSA_AVK_MSGID_SET_PLAYER_APP_VALUE_RSP;
+typedef tBSA_GET_CUR_APP_VALUE_MSG          tBSA_AVK_MSGID_GET_PLAYER_VALUE_RSP;
+typedef tBSA_AVK_GET_ELEMENT_ATTR_MSG       tBSA_AVK_MSGID_GET_ELEMENT_ATTR_RSP;
+typedef tBSA_AVK_GET_PLAY_STATUS_MSG        tBSA_AVK_MSGID_GET_PLAY_STATUS_RSP;
+typedef tBSA_AVK_SET_ADDRESSED_PLAYER_MSG   tBSA_AVK_MSGID_SET_ADDRESSED_PLAYER_RSP;
+typedef tBSA_AVK_SET_BR_PLAYER_MSG          tBSA_AVK_MSGID_SET_BR_PLAYER_RSP;
+typedef tBSA_AVK_GET_ITEMS_MSG              tBSA_AVK_MSGID_GET_ITEMS_RSP;
+typedef tBSA_AVK_CHG_PATH_MSG               tBSA_AVK_MSGID_CHG_PATH_RSP;
+typedef tBSA_AVK_GET_ITEM_ATTR_MSG          tBSA_AVK_MSGID_GET_ITEM_ATTR_RSP;
+typedef tBSA_AVK_PLAY_ITEM_MSG              tBSA_AVK_MSGID_PLAY_ITEM_RSP;
+typedef tBSA_AVK_NOW_PLAYING_MSG            tBSA_AVK_MSGID_NOW_PLAYING_RSP;
+
+
+/* union of data associated with AVK messages */
+typedef union
+{
+    tBSA_AVK_MSGID_ENABLE_CMD_REQ enable_req;
+    tBSA_AVK_MSGID_ENABLE_CMD_RSP enable_rsp;
+
+    tBSA_AVK_MSGID_DISABLE_CMD_RSP disable_rsp;
+
+    tBSA_AVK_MSGID_REGISTER_CMD_REQ register_req;
+    tBSA_AVK_MSGID_REGISTER_CMD_RSP register_rsp;
+
+    tBSA_AVK_MSGID_DEREGISTER_CMD_REQ deregister_req;
+    tBSA_AVK_MSGID_DEREGISTER_CMD_RSP deregister_rsp;
+
+    tBSA_AVK_MSGID_OPEN_CMD_REQ open_req;
+    tBSA_AVK_MSGID_OPEN_CMD_RSP open_rsp;
+    tBSA_AVK_MSGID_OPEN_EVT open_evt;
+
+    tBSA_AVK_MSGID_CLOSE_CMD_REQ close_req;
+    tBSA_AVK_MSGID_CLOSE_CMD_RSP close_rsp;
+    tBSA_AVK_MSGID_CLOSE_EVT close_evt;
+
+    tBSA_AVK_MSGID_START_CMD_REQ start_req;
+    tBSA_AVK_MSGID_START_CMD_RSP start_rsp;
+    tBSA_AVK_MSGID_START_EVT start_evt;
+
+    tBSA_AVK_MSGID_STOP_CMD_REQ stop_req;
+    tBSA_AVK_MSGID_STOP_CMD_RSP stop_rsp;
+    tBSA_AVK_MSGID_STOP_EVT stop_evt;
+
+    tBSA_AVK_MSGID_RC_OPEN_EVT rc_open_evt;
+    tBSA_AVK_MSGID_REMOTE_CMD_RSP remote_rsp;
+
+    tBSA_AVK_MSGID_VENDOR_CMD_REQ vendor_cmd_req;
+    tBSA_AVK_MSGID_VENDOR_CMD_RES vendor_cmd_res;
+
+    tBSA_AVK_MSGID_CP_INFO_EVT cp_info_evt;
+
+    /*meta commands*/
+    tBSA_AVK_MSGID_REG_NOTIF_RSP            reg_notif;
+    tBSA_AVK_MSGID_LIST_APP_ATTR_RSP        list_app_attr;
+    tBSA_AVK_MSGID_LIST_APP_VALUES_RSP      list_app_values;
+    tBSA_AVK_MSGID_SET_PLAYER_APP_VALUE_RSP set_app_val;
+    tBSA_AVK_MSGID_GET_PLAYER_VALUE_RSP     get_cur_app_val;
+    tBSA_AVK_MSGID_GET_ELEMENT_ATTR_RSP        get_elem_attrs;
+    tBSA_AVK_MSGID_GET_PLAY_STATUS_RSP      get_play_status;
+    tBSA_AVK_MSGID_SET_ADDRESSED_PLAYER_RSP addr_player;
+    tBSA_AVK_MSGID_SET_BR_PLAYER_RSP        br_player;
+    tBSA_AVK_MSGID_GET_ITEMS_RSP            get_items;
+    tBSA_AVK_MSGID_CHG_PATH_RSP             chg_path;
+    tBSA_AVK_MSGID_GET_ITEM_ATTR_RSP        get_attrs;
+    tBSA_AVK_MSGID_PLAY_ITEM_RSP            play_item;    
+    tBSA_AVK_MSGID_NOW_PLAYING_RSP          add_to_play;
+
+} tBSA_AVK_MSG_ID;
+
+
+
+/* Control Block  (used by client) */
+typedef struct
+{
+    tBSA_AVK_CBACK *p_app_avk_cback;
+} tBSA_AVK_CB;
+
+extern tBSA_AVK_CB bsa_avk_cb;
+
+/*******************************************************************************
+ **
+ ** Function       bsa_avk_event_hdlr
+ **
+ ** Description    Handle server avk events
+ **
+ ** Parameters   message_id : Server message id
+ **                     p_buffer : pointer on a buffer containning data associated with the message
+ **                     length : length of the message
+ **
+ ** Returns        None
+ **
+ *******************************************************************************/
+void bsa_avk_event_hdlr(int message_id, tBSA_AVK_MSG *p_data, UINT16 length);
+
+#endif
+

@@ -1,0 +1,143 @@
+bsacommondir = $(bsadir)/common
+bsaincdir = $(bsadir)/include
+bsaclientdir = $(clientdir)/disc \
+               $(clientdir)/dm \
+               $(clientdir)/mgt \
+               $(clientdir)/sec \
+               $(clientdir)/ft \
+               $(clientdir)/sys
+
+bsasrcs = \
+    bsa_sys.c \
+    bsa_mgt_api.c \
+    bsa_mgt_int.c \
+    bsa_dm_api.c \
+    bsa_cl_dm_int.c \
+    bsa_disc_api.c \
+    bsa_disc_int.c \
+    bsa_sec_api.c \
+    bsa_sec_int.c
+
+# Compile/link common function only for linux
+ifeq ($(strip $(os_name)),linux)
+bsasrcs := $(bsasrcs) bsa_bd.c bsa_strm_dec.c bsa_trace.c
+endif
+
+# For VxWorks, client and server are linked together => client use server files
+ifeq ($(strip $(os_name)),vxworks)
+endif
+
+
+ifeq ($(strip $(BSA_TM_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_tm_api.c bsa_cl_tm_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/tm
+endif
+
+ifeq ($(strip $(BSA_FTS_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_fts_api.c bsa_fts_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/ft
+endif
+
+ifeq ($(strip $(BSA_FTC_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_ftc_api.c bsa_ftc_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/ft
+endif
+
+ifeq ($(strip $(BSA_HH_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_hh_api.c bsa_hh_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/hh
+endif
+
+ifeq ($(strip $(BSA_HD_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_hd_api.c bsa_hd_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/hd
+endif
+
+ifeq ($(strip $(BSA_MCE_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_mce_api.c bsa_mce_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/mce
+endif
+
+ifeq ($(strip $(BSA_PBS_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_pbs_api.c bsa_pbs_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/pb
+endif
+
+ifeq ($(strip $(BSA_SC_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_sc_api.c bsa_sc_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/sc
+endif
+
+ifeq ($(strip $(BSA_SAC_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_sac_api.c bsa_sac_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/sc
+endif
+
+ifeq ($(strip $(BSA_PBC_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_pbc_api.c bsa_pbc_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/pb
+endif
+
+ifeq ($(strip $(BSA_OPS_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_ops_api.c bsa_ops_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/op
+endif
+
+ifeq ($(strip $(BSA_OPC_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_opc_api.c bsa_opc_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/op
+endif
+
+ifeq ($(strip $(BSA_AV_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_cl_av_api.c bsa_cl_av_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/av
+endif
+
+ifeq ($(strip $(BSA_AVK_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_avk_api.c bsa_avk_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/avk
+endif
+
+ifeq ($(strip $(BSA_HS_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_hs_api.c bsa_hs_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/hs
+endif
+
+ifeq ($(strip $(BSA_DG_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_dg_api.c bsa_dg_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/dg
+endif
+
+ifeq ($(strip $(BSA_PAN_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_pan_api.c bsa_pan_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/pan
+endif
+
+ifeq ($(strip $(BSA_AG_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_ag_api.c bsa_ag_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/ag
+endif
+
+ifeq ($(strip $(BSA_HL_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_hl_api.c bsa_cl_hl_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/hl
+endif
+
+ifeq ($(strip $(BSA_NSA_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_nsa_api.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/nsa
+endif
+
+ifeq ($(strip $(BLE_INCLUDED)),TRUE)
+bsasrcs := $(bsasrcs) bsa_ble_api.c bsa_ble_int.c
+bsaclientdir := $(bsaclientdir) $(clientdir)/ble
+endif
+
+bsasources := $(bsasources) $(bsasrcs)
+bsadirs = $(bsacommondir) $(bsaclientdir) $(bsaincdir)
+
+#include path for brcm header files
+incdirs := $(incdirs) $(bsadirs)
+srcdirs := $(srcdirs) $(bsadirs)
+
+
